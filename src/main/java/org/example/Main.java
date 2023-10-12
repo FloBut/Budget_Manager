@@ -2,6 +2,8 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 //21. Budget Manager
 //Aplicatia le va permite utilizatorilor sa isi gestioneze bugetul.
@@ -25,40 +27,65 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         //imi definesc niste cheltuieli
-      Purchase purchase1 = new Purchase("Legume", 25, Category.FOOD);
-      Purchase purchase2 = new Purchase("tricou", 50, Category.CLOTHES);
-      Purchase purchase3 = new Purchase("Fructe", 30, Category.FOOD);
-      Purchase purchase4 = new Purchase("tenesi", 80, Category.CLOTHES);
-      Purchase purchase5 = new Purchase("Fructe", 100, Category.UTILITIES);
-      Purchase purchase6 = new Purchase("tenesi", 70, Category.UTILITIES);
+      User user = new User("John", 2000);
+        user.addNewPurchase(new Purchase("Legume", 25, Category.FOOD));
+        user.addNewPurchase(new Purchase("tricou", 50, Category.CLOTHES));
+        user.addNewPurchase(new Purchase("Fructe", 30, Category.FOOD));
+        user.addNewPurchase(new Purchase("tenesi", 80, Category.CLOTHES));
+        user.addNewPurchase(new Purchase("Factura1", 100, Category.UTILITIES));
+        user.addNewPurchase(new Purchase("Factura2", 70, Category.UTILITIES));
       //definesc o lista in care voi adauga aceste cheltuieli
         List <Purchase> purchases = new ArrayList<>();
-        purchases.add(purchase1);
-        purchases.add(purchase2);
-        purchases.add(purchase3);
-        purchases.add(purchase4);
-        // definsex un utilizator
-      User user = new User("John", 2000);
 
-      //•	Vizualizarea tututor cheltuielilor
-      System.out.println(user.viewPurchases().toString());// aici imi returneaza lista goala
-      //•	Vizualizarea cheltuielilor dintr-o anumita categorie
-      System.out.println(user.viewPurchaseByCategory(Category.FOOD)); //ar trebui sa imi returneze cheltuielile din categoria mancare
-      //Vizualizarea cheltuielilor grupate pe categorii
-      System.out.println(user.viewPurchaseForAllCategory());// ar trebui sa returnez toata lista de cheltuilei
-      System.out.println(user.getTotalPriceByCategory());
-      System.out.println(user.getMaxPurcahse());
-      System.out.println(user.getMinPurcahse());
-     System.out.println(user.getPurchaseBetweenTwoValue(90,30));
-     System.out.println(user.getAscendingPriceByCategory(Category.UTILITIES));
+      //Vizualizarea tututor cheltuielilor
+        List<Purchase> allPurcahses = user.viewPurchases();
+        for (Purchase purchase:allPurcahses) {
+            System.out.println(purchase);
+        }
+        System.out.println("------------------------");
+      //Vizualizarea cheltuielilor dintr-o anumita categorie
+      System.out.println(user.viewPurchaseByCategory(Category.FOOD));
+      System.out.println("----------------------------");
+
+      //Vizualizarea totalului cheltuielilor grupate pe categorii
+      Map<Category, Double> totalPriceByCategory = user.getTotalPriceByCategory();
+      for (Map.Entry<Category, Double> entry : totalPriceByCategory.entrySet()) {
+        System.out.println(entry.getKey() + ":" + entry.getValue());
+        System.out.println("----------------------------");
+      }
+      //Vizualizarea categoriei in care s-a cheltuit cel mai mult
+      Category maxPriceByCategory = user.getMaxPurchase();
+      System.out.println("Category with maximum purchase is " +  maxPriceByCategory);
+      System.out.println("----------------------------");
+
+      // Vizualizarea categoriei in care s-a cheltuit cel mai putin
+      Category minPriceByCategory = user.getMinPurchase();
+      System.out.println("Category with minimum purchase is " + minPriceByCategory);
+      System.out.println("----------------------------");
+
+      //Vizualizarea tuturor cheltuielilor dintr-un interval de pret
+     double minPrice = 50;
+     double maxPrice = 150;
+     List<Purchase> purchasesInRange = user.getPurchaseBetweenTwoValue(minPrice, maxPrice);
+     for (Purchase purchase:purchasesInRange) {
+        System.out.println(purchase);
+     }
+      System.out.println("----------------------------");
+
+      //Sortarea cheltuielilor dintr-o anumita categorie dupa pret
+      List<Purchase> ascendingPriceByCategory = user.ascendingSortingByPrice();
+     for (Purchase purchase:ascendingPriceByCategory) {
+       System.out.println(purchase);
+     }
+      System.out.println("----------------------------");
+
+      //Vizualizarea bugetului disponibil
       System.out.println(user.getDisponibleBudget());
-    // afisez ->
-      // []
-      //[]
-      //{}
-      //{}
+      System.out.println("----------------------------");
 
-
+      //Stergerea unei cheltuieli
+      System.out.println(user.removePurchase("tricou"));
+      System.out.println("----------------------------");
 
     }
 }
